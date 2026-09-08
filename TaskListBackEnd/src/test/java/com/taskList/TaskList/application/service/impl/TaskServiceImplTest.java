@@ -2,6 +2,7 @@ package com.taskList.TaskList.application.service.impl;
 
 import com.taskList.TaskList.application.service.TaskService;
 import com.taskList.TaskList.domain.dto.TaskDTO;
+import com.taskList.TaskList.domain.enums.TaskStatusEnum;
 import com.taskList.TaskList.domain.model.TaskModel;
 import com.taskList.TaskList.infrastrucutre.repository.LogRepository;
 import com.taskList.TaskList.infrastrucutre.repository.TaskRepository;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -37,7 +39,8 @@ public class TaskServiceImplTest {
                 "Teste Junit",
                 "Teste feito com o junit",
                 LocalDate.now(),
-                LocalDate.now()
+                LocalDate.now(),
+                TaskStatusEnum.NEW
         );
 
         TaskModel taskCreated = taskService.create(task);
@@ -61,7 +64,6 @@ public class TaskServiceImplTest {
                 taskFromDatabase.get().getDescription()
         );
 
-        //TODO: adicionar uma forma de remoção após cada Teste
 
     }
 

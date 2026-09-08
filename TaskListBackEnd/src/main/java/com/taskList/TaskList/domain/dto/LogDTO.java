@@ -1,14 +1,15 @@
 package com.taskList.TaskList.domain.dto;
 
+import com.taskList.TaskList.domain.enums.LogTypeEnum;
 import com.taskList.TaskList.domain.model.LogModel;
 import com.taskList.TaskList.domain.model.TaskModel;
 
 import java.time.LocalDate;
 
-public record LogDTO(String description, LocalDate createdAt, LocalDate updatedAt, TaskModel task) {
+public record LogDTO(String description, LocalDate createdAt, LocalDate updatedAt, TaskModel task, LogTypeEnum logTypeEnum) {
 
     public LogDTO toDTO(LogModel log,TaskModel task) {
-        return  new LogDTO(log.getDescription(),log.getCreatedAt(),log.getUpdatedAt(),task);
+        return  new LogDTO(log.getDescription(),log.getCreatedAt(),log.getUpdatedAt(),task,logTypeEnum);
     }
 
 }
