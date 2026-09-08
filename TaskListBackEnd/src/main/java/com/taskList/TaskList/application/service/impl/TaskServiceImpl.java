@@ -4,11 +4,13 @@ import com.taskList.TaskList.application.service.TaskService;
 
 import com.taskList.TaskList.domain.dto.LogDTO;
 import com.taskList.TaskList.domain.dto.TaskDTO;
+import com.taskList.TaskList.domain.enums.LogTypeEnum;
 import com.taskList.TaskList.domain.model.TaskModel;
 import com.taskList.TaskList.infrastrucutre.repository.TaskRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 
@@ -28,7 +30,7 @@ public class TaskServiceImpl implements TaskService {
     public TaskModel create(TaskDTO taskDTO) {
         TaskServiceImpl.log.info("Inicializando Cadastro da task: "+taskDTO.toString());
         TaskModel taskSave = taskRepository.save(TaskModel.toModel(taskDTO));
-        LogDTO logDTO = new LogDTO("Cadastro feito com sucesso da Task: ", LocalDate.now(),LocalDate.now(),taskSave);
+        LogDTO logDTO = new LogDTO("Cadastro feito com sucesso da Task: ", LocalDate.now(),LocalDate.now(),taskSave, LogTypeEnum.SUCCESSFUL);
         logRepository.createLog(logDTO,taskSave);
         TaskServiceImpl.log.info("Cadastro Feito!");
         return taskSave;
