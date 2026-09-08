@@ -28,8 +28,8 @@ public class TaskServiceImpl implements TaskService {
     public TaskModel create(TaskDTO taskDTO) {
         TaskServiceImpl.log.info("Inicializando Cadastro da task: "+taskDTO.toString());
         TaskModel taskSave = taskRepository.save(TaskModel.toModel(taskDTO));
-        LogDTO logDTO = new LogDTO("Cadastro feito com sucesso da Task: "+taskSave, LocalDate.now(),LocalDate.now());
-        logRepository.createLog(logDTO);
+        LogDTO logDTO = new LogDTO("Cadastro feito com sucesso da Task: ", LocalDate.now(),LocalDate.now(),taskSave);
+        logRepository.createLog(logDTO,taskSave);
         TaskServiceImpl.log.info("Cadastro Feito!");
         return taskSave;
     }

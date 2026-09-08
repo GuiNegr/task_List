@@ -61,7 +61,8 @@ public class TaskServiceImplTest {
                 taskFromDatabase.get().getDescription()
         );
 
-        taskRepository.deleteById(taskCreated.getId());
+        //TODO: adicionar uma forma de remoção após cada Teste
+
     }
 
 }

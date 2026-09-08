@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDate;
 
 @Table(name = "Log")
@@ -13,7 +15,7 @@ import java.time.LocalDate;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-
+@Setter
 public class LogModel {
 
     @Id
@@ -30,6 +32,8 @@ public class LogModel {
     private LocalDate updatedAt;
 
     //TODO: deixar o log associado a uma task
+    @ManyToOne
+    @JoinColumn(name = "id_task")
     private TaskModel task;
 
 
