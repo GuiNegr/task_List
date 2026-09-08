@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: TaskList
+  datasource:
+    url:  "jdbc:postgresql://localhost:5432/taskList_bd"
+    username: "postgres"
+    password: "senha"
+    configuration:
+      maximun-pool-size: 10
+  flyway:
+    enabled: true
+    # Enable Virtual Thread.
+  threads:
+    virtual:
+      enabled: true
+  jpa:
+    show-sql: ${SQL_SHOW_JPA:true}
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect

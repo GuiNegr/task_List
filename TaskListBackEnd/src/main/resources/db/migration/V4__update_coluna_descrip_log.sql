@@ -1,0 +1,1 @@
+alter table log alter column description set data type varchar(500);
