@@ -4,10 +4,7 @@ package com.taskList.TaskList.domain.model;
 import com.taskList.TaskList.domain.dto.TaskDTO;
 import com.taskList.TaskList.domain.enums.TaskStatusEnum;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
@@ -40,6 +37,11 @@ public class TaskModel {
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Column(name = "taskstatus")
     private TaskStatusEnum taskStatus;
+
+    @ManyToOne
+    @JoinColumn(name = "id_card")
+    @Setter
+    private CardModel cardModel;
 
     public  TaskModel(String title, String description, LocalDate date, LocalDate date1,TaskStatusEnum taskStatus) {
         this.title = title;

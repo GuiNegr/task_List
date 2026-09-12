@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @SpringBootTest
@@ -63,8 +64,18 @@ public class TaskServiceImplTest {
                 "Teste feito com o junit",
                 taskFromDatabase.get().getDescription()
         );
+    }
 
+    @Test
+    void shouldReturnAListWithTaskStatusEqualsNew(){
+        Optional<List<TaskModel>> taskList = taskService.findByStatus("NEW");
+        Assertions.assertTrue(taskList.isPresent());
+    }
 
+    @Test
+    void shouldNOtReturnAListIfDoesNotExistTaskWithStatusThatHasPassed(){
+        Optional<List<TaskModel>> taskList = taskService.findByStatus("QUALQUER_NOME");
+        Assertions.assertFalse(taskList.isPresent());
     }
 
 }
