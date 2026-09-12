@@ -5,6 +5,8 @@ import com.taskList.TaskList.application.service.TaskService;
 import com.taskList.TaskList.domain.dto.LogDTO;
 import com.taskList.TaskList.domain.dto.TaskDTO;
 import com.taskList.TaskList.domain.enums.LogTypeEnum;
+import com.taskList.TaskList.domain.enums.TaskStatusEnum;
+import com.taskList.TaskList.domain.exception.TaskStatusEnumException;
 import com.taskList.TaskList.domain.model.TaskModel;
 import com.taskList.TaskList.infrastrucutre.repository.TaskRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 
 @Slf4j
@@ -49,5 +53,27 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void delete(TaskDTO taskDTO) {
         TaskServiceImpl.log.warn("Deletando a task: "+taskDTO.toString());
+    }
+
+    @Override
+    public Optional<List<TaskModel>> findByStatus(String status) {
+        TaskStatusEnum taskStatusEnum = TaskStatusEnum.getEnumByValue(status);
+
+
+        if(taskStatusEnum.getEnumValue().contains("ERROR")){
+            TaskServiceImpl.log.error("Erro ao buscar a task: "+status);
+            return Optional.empty();
+        }
+
+        Optional<List<TaskModel>> taskList = taskRepository.findByTaskStatus(taskStatusEnum);
+        if(taskList.isPresent()){
+            TaskServiceImpl.log.info("Lista de task econtrada! retornado: ");
+            return taskList;
+        }
+        else{
+            TaskServiceImpl.log.warn("Erro ao buscar a task: "+status);
+        }
+
+        return  Optional.empty();
     }
 }
