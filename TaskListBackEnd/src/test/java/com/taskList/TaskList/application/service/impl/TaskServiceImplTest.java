@@ -2,6 +2,7 @@ package com.taskList.TaskList.application.service.impl;
 
 import com.taskList.TaskList.application.service.TaskService;
 import com.taskList.TaskList.domain.dto.TaskDTO;
+import com.taskList.TaskList.domain.dto.TaskResponseDTO;
 import com.taskList.TaskList.domain.enums.TaskStatusEnum;
 import com.taskList.TaskList.domain.model.TaskModel;
 import com.taskList.TaskList.infrastrucutre.repository.LogRepository;
@@ -44,14 +45,14 @@ public class TaskServiceImplTest {
                 TaskStatusEnum.NEW
         );
 
-        TaskModel taskCreated = taskService.create(task);
+        TaskResponseDTO taskCreated = taskService.create(task);
 
         Assertions.assertNotNull(taskCreated);
 
-        Assertions.assertNotNull(taskCreated.getId());
+        Assertions.assertNotNull(taskCreated.id());
 
         Optional<TaskModel> taskFromDatabase =
-                taskRepository.findById(taskCreated.getId());
+                taskRepository.findById(taskCreated.id());
 
         Assertions.assertTrue(taskFromDatabase.isPresent());
 
@@ -68,14 +69,20 @@ public class TaskServiceImplTest {
 
     @Test
     void shouldReturnAListWithTaskStatusEqualsNew(){
-        Optional<List<TaskModel>> taskList = taskService.findByStatus("NEW");
+        Optional<List<TaskDTO>> taskList = taskService.findByStatus("NEW");
         Assertions.assertTrue(taskList.isPresent());
     }
 
     @Test
     void shouldNOtReturnAListIfDoesNotExistTaskWithStatusThatHasPassed(){
-        Optional<List<TaskModel>> taskList = taskService.findByStatus("QUALQUER_NOME");
+        Optional<List<TaskDTO>> taskList = taskService.findByStatus("QUALQUER_NOME");
         Assertions.assertFalse(taskList.isPresent());
+    }
+
+    @Test
+    void shouldReturnAlistWithAllTasks(){
+        Optional<List<TaskDTO>> taskList = taskService.returnAllTask();
+        Assertions.assertTrue(taskList.isPresent());
     }
 
 }

@@ -2,6 +2,7 @@ package com.taskList.TaskList.domain.model;
 
 
 import com.taskList.TaskList.domain.dto.TaskDTO;
+import com.taskList.TaskList.domain.dto.TaskResponseDTO;
 import com.taskList.TaskList.domain.enums.TaskStatusEnum;
 import jakarta.persistence.*;
 import lombok.*;
@@ -49,6 +50,15 @@ public class TaskModel {
         this.createdAt = date;
         this.updatedAt = date1;
         this.taskStatus = taskStatus;
+    }
+
+    public static TaskDTO toDTO(TaskModel taskModel) {
+        return new TaskDTO(taskModel.getTitle(),taskModel.getDescription(),taskModel.getCreatedAt(),taskModel.getUpdatedAt(),taskModel.getTaskStatus());
+    }
+
+    public static TaskResponseDTO toResponseDTO(TaskModel taskModel) {
+        return new TaskResponseDTO(taskModel.getId(),taskModel.getTitle(),taskModel.getDescription(),taskModel.getCreatedAt(),taskModel.getUpdatedAt(),taskModel.getTaskStatus());
+
     }
 
 
