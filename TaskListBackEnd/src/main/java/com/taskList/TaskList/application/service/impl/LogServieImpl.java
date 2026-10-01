@@ -4,7 +4,7 @@ import com.taskList.TaskList.application.service.LogService;
 import com.taskList.TaskList.domain.dto.LogDTO;
 import com.taskList.TaskList.domain.model.LogModel;
 import com.taskList.TaskList.domain.model.TaskModel;
-import com.taskList.TaskList.infrastrucutre.repository.LogRepository;
+import com.taskList.TaskList.domain.repository.LogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

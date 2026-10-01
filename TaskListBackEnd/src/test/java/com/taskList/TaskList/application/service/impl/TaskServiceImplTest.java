@@ -5,14 +5,12 @@ import com.taskList.TaskList.domain.dto.TaskDTO;
 import com.taskList.TaskList.domain.dto.TaskResponseDTO;
 import com.taskList.TaskList.domain.enums.TaskStatusEnum;
 import com.taskList.TaskList.domain.model.TaskModel;
-import com.taskList.TaskList.infrastrucutre.repository.LogRepository;
-import com.taskList.TaskList.infrastrucutre.repository.TaskRepository;
+import com.taskList.TaskList.domain.repository.LogRepository;
+import com.taskList.TaskList.domain.repository.TaskRepository;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -85,4 +83,15 @@ public class TaskServiceImplTest {
         Assertions.assertTrue(taskList.isPresent());
     }
 
+    @Test
+    void shouldReturnAListWithTasksInCurrentDate(){
+        Optional<List<TaskDTO>> taskList = taskService.findByCreatedAtBetween(LocalDate.now().minusDays(12), LocalDate.now().plusDays(1));
+        Assertions.assertTrue(taskList.isPresent());
+    }
+
+    @Test
+    void shouldNotReturnAListWithTasksInCurrentDate(){
+        Optional<List<TaskDTO>> taskList = taskService.findByCreatedAtBetween(LocalDate.now().plusDays(20), LocalDate.now().plusDays(30));
+        Assertions.assertTrue(taskList.isEmpty());
+    }
 }

@@ -7,6 +7,7 @@ import com.taskList.TaskList.domain.enums.TaskStatusEnum;
 import com.taskList.TaskList.domain.model.TaskModel;
 import org.springframework.scheduling.config.Task;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +18,7 @@ public interface TaskService {
     void read(TaskDTO TaskDTO);
     void delete(TaskDTO TaskDTO);
     Optional<List<TaskDTO>> findByStatus(String status);
+    Optional<List<TaskDTO>> findByCreatedAtBetween(LocalDate start, LocalDate end);
     Optional<List<TaskDTO>> returnAllTask();
 
 }

@@ -1,4 +1,4 @@
-package com.taskList.TaskList.infrastrucutre.repository;
+package com.taskList.TaskList.domain.repository;
 
 import com.taskList.TaskList.domain.model.LogModel;
 import com.taskList.TaskList.domain.model.TaskModel;
