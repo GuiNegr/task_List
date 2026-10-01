@@ -7,9 +7,9 @@ import com.taskList.TaskList.domain.dto.TaskDTO;
 import com.taskList.TaskList.domain.dto.TaskResponseDTO;
 import com.taskList.TaskList.domain.enums.LogTypeEnum;
 import com.taskList.TaskList.domain.enums.TaskStatusEnum;
-import com.taskList.TaskList.domain.exception.TaskStatusEnumException;
 import com.taskList.TaskList.domain.model.TaskModel;
-import com.taskList.TaskList.infrastrucutre.repository.TaskRepository;
+import com.taskList.TaskList.domain.repository.TaskRepository;
+import com.taskList.TaskList.shared.serviceUtils.TaskUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -30,6 +29,9 @@ public class TaskServiceImpl implements TaskService {
     @Autowired
     private LogServieImpl logRepository;
 
+
+    @Autowired
+    private TaskUtils taskUtils;
 
     @Override
     public TaskResponseDTO create(TaskDTO taskDTO) {
@@ -56,7 +58,7 @@ public class TaskServiceImpl implements TaskService {
         TaskServiceImpl.log.warn("Deletando a task: "+taskDTO.toString());
     }
 
-    //migrar para usar DTO
+
     @Override
     public Optional<List<TaskDTO>> findByStatus(String status) {
         TaskStatusEnum taskStatusEnum = TaskStatusEnum.getEnumByValue(status);
@@ -75,6 +77,18 @@ public class TaskServiceImpl implements TaskService {
         }
 
         return  Optional.empty();
+    }
+
+    @Override
+    public Optional<List<TaskDTO>> findByCreatedAtBetween(LocalDate start, LocalDate end) {
+        List<TaskModel> taskModels = taskRepository.findByCreatedAtBetween(start, end);
+        List<TaskDTO> taskDTOS = taskUtils.transformTaskModelsToDTOs(taskModels);
+        if(taskDTOS.isEmpty()){
+            TaskServiceImpl.log.warn("Lista de task não encontrada!");
+            return Optional.empty();
+        }
+
+        return Optional.of(taskDTOS);
     }
 
     @Override
