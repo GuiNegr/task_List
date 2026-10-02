@@ -8,6 +8,8 @@ import com.taskList.TaskList.domain.repository.LogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 public class LogServieImpl implements LogService {
@@ -21,5 +23,10 @@ public class LogServieImpl implements LogService {
         LogModel log = LogModel.toModel(logDTO);
         log.setTask(task);
         logRepository.save(log);
+    }
+
+    @Override
+    public List<LogDTO> getLogs(TaskModel task) {
+        return List.of();
     }
 }

@@ -13,8 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @SpringBootTest
 public class TaskServiceImplTest {
@@ -25,12 +24,6 @@ public class TaskServiceImplTest {
 
     @Autowired
     private TaskRepository taskRepository;
-
-    @Autowired
-    private LogRepository logRepository;
-
-
-
 
     @Test
     void shouldSaveInPostgreeSQL() {
@@ -94,4 +87,37 @@ public class TaskServiceImplTest {
         Optional<List<TaskDTO>> taskList = taskService.findByCreatedAtBetween(LocalDate.now().plusDays(20), LocalDate.now().plusDays(30));
         Assertions.assertTrue(taskList.isEmpty());
     }
+
+    @Test
+    void shouldUpateTitleWithSucess(){
+        TaskDTO task = new TaskDTO(
+                "Teste Junit",
+                "Teste feito com o junit",
+                LocalDate.now(),
+                LocalDate.now(),
+                TaskStatusEnum.NEW
+        );
+
+        TaskResponseDTO taskCreated = taskService.create(task);
+        Map<String, Object> request = new HashMap<>();
+        request.put("title","Task atualizada pelo JuNit");
+        request.put("id",taskCreated.id());
+        Optional<TaskResponseDTO> taskTest = taskService.update(request);
+
+        Assertions.assertTrue(taskTest.get().title().equals("Task atualizada pelo JuNit"));
+    }
+
+    @Test
+    void sholdNotUpdateTitleIfNotExistId(){
+        Random random = new Random(System.currentTimeMillis());
+
+        Map<String, Object> request = new HashMap<>();
+        request.put("title","Task atualizada pelo JuNit");
+        request.put("id",random.nextLong());
+        Optional<TaskResponseDTO> taskTest = taskService.update(request);
+
+        Assertions.assertTrue(taskTest.isEmpty(), "Deve estar vazio taskResponse!");
+    }
+
+
 }

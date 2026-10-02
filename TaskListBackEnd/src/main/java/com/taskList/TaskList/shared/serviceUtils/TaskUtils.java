@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface TaskUtils {
 
-    List<TaskDTO> transformTaskModelsToDTOs(List<TaskModel> taskModels);
+    static List<TaskDTO> transformTaskModelsToDTOs(List<TaskModel> taskModels) {
+        return null;
+    }
 
 }

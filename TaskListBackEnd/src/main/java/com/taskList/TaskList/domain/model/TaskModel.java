@@ -9,7 +9,6 @@ import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
-import java.sql.Date;
 import java.time.LocalDate;
 
 @Entity
@@ -17,6 +16,8 @@ import java.time.LocalDate;
 @Table(name = "Task")
 @Getter
 @AllArgsConstructor
+@Setter
+
 @NoArgsConstructor
 public class TaskModel {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -15,7 +15,6 @@ import java.util.List;
  * @author ubuntuuser
  * @date 2026/09/30 23:45
  */
-@Component
 @Slf4j
 public class TaskUtilsImpl implements TaskUtils {
 
@@ -25,8 +24,7 @@ public class TaskUtilsImpl implements TaskUtils {
      * @param taskModels lista de tasks apartir da classe model
      * @return {@link List<TaskDTO>}
      */
-    @Override
-    public List<TaskDTO> transformTaskModelsToDTOs(List<TaskModel> taskModels) {
+    public static List<TaskDTO> transformTaskModelsToDTOs(List<TaskModel> taskModels) {
         if(taskModels==null || taskModels.isEmpty()){
             return new ArrayList<>();
         }
