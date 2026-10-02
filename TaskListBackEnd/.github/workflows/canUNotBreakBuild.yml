@@ -1,6 +1,10 @@
 name: por favor, se quebrou o build concerte!
 on:
-  pull_request: ["main","development","fix/*"]
+  pull_request:
+    branches:
+      - main
+      - development
+      - 'fix/*'
 
 jobs:
   build:
