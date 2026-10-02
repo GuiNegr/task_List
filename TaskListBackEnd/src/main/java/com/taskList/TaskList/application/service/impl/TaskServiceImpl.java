@@ -11,11 +11,13 @@ import com.taskList.TaskList.domain.model.TaskModel;
 import com.taskList.TaskList.domain.repository.TaskRepository;
 import com.taskList.TaskList.shared.serviceUtils.TaskUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -30,8 +32,6 @@ public class TaskServiceImpl implements TaskService {
     private LogServieImpl logRepository;
 
 
-    @Autowired
-    private TaskUtils taskUtils;
 
     @Override
     public TaskResponseDTO create(TaskDTO taskDTO) {
@@ -44,8 +44,41 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void update(TaskDTO taskDTO) {
-        TaskServiceImpl.log.info("Atualizando a task: "+taskDTO.toString());
+    public Optional<TaskResponseDTO> update(Map<String, Object> request) {
+        Long id = (Long) request.get("id");
+
+        if(id==null){
+            TaskServiceImpl.log.error("Não foi informado o id para atualização da task");
+            return Optional.empty();
+        }
+
+        TaskModel oldTask =  taskRepository.findById(id).orElse(null);
+
+        if(oldTask==null){
+            TaskServiceImpl.log.error("Id informado não trouxe task");
+            return  Optional.empty();
+        }
+
+        TaskResponseDTO taskResponseDTO = TaskModel.toResponseDTO(oldTask);
+
+
+        if(request.get("description") != null  ){
+            taskResponseDTO = updateTaskDescription((String) request.get("description"), id);
+        }
+
+        if(request.get("title") != null  ){
+            taskResponseDTO = updateTaskTitle((String) request.get("title"), id);
+        }
+
+        if(request.get("status") != null  ){
+            TaskStatusEnum taskStatusEnum = TaskStatusEnum.getEnumByValue((String) request.get("status"));
+            if(taskStatusEnum.getEnumValue().contains("ERROR")){
+                TaskServiceImpl.log.error("erro ao atualizar status da task: ");
+                return Optional.empty();
+            }
+            taskResponseDTO = updateTaskStatus(taskStatusEnum, id);
+        }
+        return Optional.of(taskResponseDTO);
     }
 
     @Override
@@ -54,8 +87,16 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void delete(TaskDTO taskDTO) {
-        TaskServiceImpl.log.warn("Deletando a task: "+taskDTO.toString());
+    public void deleteById(Long id) {
+        TaskServiceImpl.log.info("Buscando a task: "+id);
+        TaskModel task = taskRepository.findById(id).orElse(null);
+        if(task==null){
+            TaskServiceImpl.log.error("Não foi possivel encontrar a task com o id informado");
+
+        }else{
+            taskRepository.delete(task);
+            TaskServiceImpl.log.info("Task deletado com sucesso!");
+        }
     }
 
 
@@ -82,7 +123,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Optional<List<TaskDTO>> findByCreatedAtBetween(LocalDate start, LocalDate end) {
         List<TaskModel> taskModels = taskRepository.findByCreatedAtBetween(start, end);
-        List<TaskDTO> taskDTOS = taskUtils.transformTaskModelsToDTOs(taskModels);
+        List<TaskDTO> taskDTOS = TaskUtils.transformTaskModelsToDTOs(taskModels);
         if(taskDTOS.isEmpty()){
             TaskServiceImpl.log.warn("Lista de task não encontrada!");
             return Optional.empty();
@@ -96,5 +137,38 @@ public class TaskServiceImpl implements TaskService {
         TaskServiceImpl.log.info("Retornando todas astasks!");
         List<TaskDTO> tasks = taskRepository.findAll().stream().map(TaskModel::toDTO).toList();
         return Optional.of(tasks);
+    }
+
+    private @NonNull TaskResponseDTO updateTaskDescription(String description, Long id) {
+        TaskModel oldTask = taskRepository.findById(id).orElse(null);
+        oldTask.setDescription(description);
+        oldTask.setUpdatedAt(LocalDate.now());
+        oldTask = taskRepository.save(oldTask);
+        TaskServiceImpl.log.info("Task Atualizada: ");
+        LogDTO logDTO = new LogDTO("Task Atualizada com sucesso!",LocalDate.now(),LocalDate.now(),oldTask, LogTypeEnum.SUCCESSFUL);
+        logRepository.createLog(logDTO,oldTask);
+        return TaskModel.toResponseDTO(oldTask);
+    }
+
+    private TaskResponseDTO updateTaskTitle(String title,Long id) {
+        TaskModel oldTask = taskRepository.findById(id).orElse(null);
+        oldTask.setTitle(title);
+        oldTask.setUpdatedAt(LocalDate.now());
+        oldTask = taskRepository.save(oldTask);
+        TaskServiceImpl.log.info("Task Atualizada: ");
+        LogDTO logDTO = new LogDTO("Task Atualizada com sucesso!",LocalDate.now(),LocalDate.now(),oldTask, LogTypeEnum.SUCCESSFUL);
+        logRepository.createLog(logDTO,oldTask);
+        return TaskModel.toResponseDTO(oldTask);
+    }
+
+    private TaskResponseDTO updateTaskStatus(TaskStatusEnum taskStatusEnum,Long id) {
+        TaskModel oldTask = taskRepository.findById(id).orElse(null);
+        oldTask.setTaskStatus(taskStatusEnum);
+        oldTask.setUpdatedAt(LocalDate.now());
+        oldTask = taskRepository.save(oldTask);
+        TaskServiceImpl.log.info("Task Atualizada: ");
+        LogDTO logDTO = new LogDTO("Task Atualizada com sucesso!",LocalDate.now(),LocalDate.now(),oldTask, LogTypeEnum.SUCCESSFUL);
+        logRepository.createLog(logDTO,oldTask);
+        return TaskModel.toResponseDTO(oldTask);
     }
 }
