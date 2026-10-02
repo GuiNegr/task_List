@@ -22,5 +22,8 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
+      - name: chegando no projeto java
+        run: cd TaskListBackEnd
+
       - name: Build with Maven
         run: mvn clean install -DskipTests
