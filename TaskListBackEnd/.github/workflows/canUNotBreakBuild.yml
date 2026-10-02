@@ -5,6 +5,7 @@ on:
       - main
       - development
       - 'fix/*'
+      - 'feature/*'
 
 jobs:
   build:
