@@ -139,7 +139,7 @@ public class TaskServiceImpl implements TaskService {
         return Optional.of(tasks);
     }
 
-    private @NonNull TaskResponseDTO updateTaskDescription(String description, Long id) {
+    private TaskResponseDTO updateTaskDescription(String description, Long id) {
         TaskModel oldTask = taskRepository.findById(id).orElse(null);
         oldTask.setDescription(description);
         oldTask.setUpdatedAt(LocalDate.now());

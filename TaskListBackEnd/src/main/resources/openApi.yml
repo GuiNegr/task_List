@@ -1,0 +1,68 @@
+
+  openapi: 3.1.0
+
+  info:
+    title: TaskList
+    description: A single project used to study
+    version: 1.0.0
+
+  servers:
+    - url: http://localhost:8080
+      description: Servidor local da aplicação.
+
+  paths:
+    /task:
+      get:
+        summary: Returns a list of tasks
+        parameters:
+          - name: status
+            in: query
+            required: false
+            description: Filtra as tasks pelo status.
+            schema:
+              type: string
+              enum:
+                - NEW
+                - IN_WAITING
+                - ERROR_STATUS
+                - IN_PROGRESS
+                - COMPLETED
+                - PENDING
+        responses:
+          "200":
+            description: An array containing tasks
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/Task"
+          "404":
+            description: Não foi encontrada nenhuma task para o filtro informado.
+  components:
+    schemas:
+      Task:
+        type: object
+        properties:
+          id:
+            type: integer
+            format: int64
+          title:
+            type: string
+          description:
+            type: string
+          createdAt:
+            type: string
+            format: date
+          updatedAt:
+            type: string
+            format: date
+          taskStatus:
+            type: string
+            enum:
+              - NEW
+              - IN_WAITING
+              - ERROR_STATUS
+              - IN_PROGRESS
+              - COMPLETED
+              - PENDING

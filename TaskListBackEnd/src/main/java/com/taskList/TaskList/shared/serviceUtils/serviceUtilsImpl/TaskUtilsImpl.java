@@ -4,7 +4,6 @@ import com.taskList.TaskList.domain.dto.TaskDTO;
 import com.taskList.TaskList.domain.model.TaskModel;
 import com.taskList.TaskList.shared.serviceUtils.TaskUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
